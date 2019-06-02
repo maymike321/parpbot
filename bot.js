@@ -43,7 +43,7 @@ const handleRemindCommand = (user, userId, channelId, event, command) => {
                     : `Reminder: `;
                 bot.sendMessage({
                     to: remindCommand.userId,
-                    message: `${messageBeginning}${remindCommand.message}.\n\nLink to message: http://discordapp.com/channels/${event.d.guild_id}/${channelId}/${event.d.id}`
+                    message: `${messageBeginning}${remindCommand.message}.`
                 });
             }, remindCommand.parsedTime.diff(moment(), 'miliseconds'));
         }
