@@ -108,8 +108,8 @@ const tryParseShorthand = (possibleValue, timeUnit, abbreviations) =>
     {
         const splitValue = possibleValue.split(abbr);
         if (splitValue.length !== 2 || splitValue[1] !== '') return undefined;
+        if (isNaN(splitValue[0])) return undefined;
         const parsedNumber = parseInt(splitValue[0]);
-        if (isNaN(parsedNumber)) return undefined;
         return { 
             parsedTime: moment().add(parsedNumber, timeUnit),
             timeAmount: parsedNumber,
