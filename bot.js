@@ -21,6 +21,7 @@ bot.on('message', (user, userId, channelId, message, event) => {
         const command = message.substring(1);
         handleRemindCommand(user, userId, channelId, event, command);
         handleIdCommand(user, userId, channelId, command);
+        handlePretendToTypeCommand(channelId, command);
     }
 });
 
@@ -123,6 +124,12 @@ const handleIdCommand = (user, userId, channelId, command) => {
             to: channelId,
             message: `${user}'s id is ${userId}`
         });
+    }
+}
+
+const handlePretendToTypeCommand = (channelId, command) => {
+    if (command.toLowerCase() === "pretendtotype") {
+        bot.simulateTyping(channelId);
     }
 }
 
