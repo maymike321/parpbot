@@ -2,11 +2,21 @@
     "name": "parpbot",
     "version": "0.1.0",
     "description": "Does parp things.  What are parp things?  Why, the things that this bot does.",
-    "main": "bot.js",
+    "main": "src/bot.js",
     "author": "parp",
+    "scripts": {
+        "build": "babel src -d lib --copy-files",
+        "start": "npm run build && node .\\lib\\bot.js"
+    },
     "dependencies": {
         "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
         "moment": "^2.24.0",
         "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@babel/core": "^7.4.5",
+        "@babel/node": "^7.4.5",
+        "@babel/preset-env": "^7.4.5"
     }
 }
