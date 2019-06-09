@@ -6,7 +6,7 @@
     "author": "parp",
     "scripts": {
         "build": "babel src -d lib --copy-files",
-        "start": "npm run build && node .\\lib\\bot.js"
+        "start": "npm run build && pm2 start ./lib/bot.js"
     },
     "dependencies": {
         "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
