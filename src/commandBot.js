@@ -1,5 +1,5 @@
 const discord = require('discord.io');
-const showCommandsHandler = require('./showCommandsCommandHandler.js');
+const showCommandsCommandHandler = require('./showCommandsCommandHandler.js');
 
 export class CommandBot {
     constructor(authToken) {
@@ -9,7 +9,6 @@ export class CommandBot {
         this.commandHandlers = [];
         this.addCommandHandler = (commandHandler) => {
             const { commandName, commandAction, description } = commandHandler;
-            console.log(commandHandler);
             if (this.commandHandlers.some(command => command.commandName == commandName)) throw Error(`Command ${commandName} already registered!`);
             this.commandHandlers.push({commandName, commandAction, description});
         };
@@ -30,6 +29,6 @@ export class CommandBot {
             this.bot.connect();
         }
 
-        this.addCommandHandler(showCommandsHandler);
+        this.addCommandHandler(showCommandsCommandHandler);
     }
 }
