@@ -7,7 +7,7 @@ export class CommandBot {
         });
         this.commands = [];
         this.addCommand = (commandName, commandHandler, description) => {
-            if (this.commands.any(command => command.commandName == commandName)) throw Error(`Command ${commandName} already registered!`);
+            if (this.commands.some(command => command.commandName == commandName)) throw Error(`Command ${commandName} already registered!`);
             this.commands.push({commandName, commandHandler, description});
         };
         this.run = () => {
@@ -31,14 +31,15 @@ export class CommandBot {
     }
 }
 
-const showCommandsHandler = (words, context) => {
+const showCommandsHandler = (context, words) => {
+    if (words.length !== 0) return;
     const { channelId, commands, bot } = context;
-    const messageBeginning = `Available commands: \n`;
+    const messageBeginning = `Available commands: \n\n`;
     const messageEnd = commands.map(command => {
-        return `\t!${command.commandName}${command.description ? `: ${command.description}` : ''}\n`
-    })
+        return `!${command.commandName}${command.description ? `: ${command.description}` : ''}`
+    }).join('\n\n');
     bot.sendMessage({
         to: channelId,
-        message: `${messageBeginning}${messageEnd}.`
+        message: `${messageBeginning}${messageEnd}`
     });
 }
