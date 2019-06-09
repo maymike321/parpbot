@@ -1,4 +1,5 @@
 const discord = require('discord.io');
+const showCommandsHandler = require('./showCommandsCommandHandler.js');
 
 export class CommandBot {
     constructor(authToken) {
@@ -6,20 +7,22 @@ export class CommandBot {
             token: authToken
         });
         this.commandHandlers = [];
-        this.addCommandHandler = ({commandName, commandAction, description}) => {
+        this.addCommandHandler = (commandHandler) => {
+            const { commandName, commandAction, description } = commandHandler;
+            console.log(commandHandler);
             if (this.commandHandlers.some(command => command.commandName == commandName)) throw Error(`Command ${commandName} already registered!`);
             this.commandHandlers.push({commandName, commandAction, description});
         };
         this.run = () => {
             this.bot.on('message', (user, userId, channelId, message, event) => {
-                const messageContext = {user, userId, channelId, message, event, commands: this.commandHandlers, bot: this.bot};
+                const messageContext = {user, userId, channelId, message, event, commandHandlers: this.commandHandlers, bot: this.bot};
                 if (message.substring(0, 1) === "!") {
                     const tokenizedMessage = message.split(' ');
                     const givenCommandName = tokenizedMessage[0].substring(1).toLowerCase();
-                    this.commandHandlers.forEach(command => {
-                        const { commandName, commandHandler } = command;
+                    this.commandHandlers.forEach(commandHandler => {
+                        const { commandName, commandAction } = commandHandler;
                         if (commandName === givenCommandName) {
-                            commandHandler(messageContext, tokenizedMessage.slice(1));
+                            commandAction(messageContext, tokenizedMessage.slice(1));
                         }
                     });
                 }
@@ -29,18 +32,4 @@ export class CommandBot {
 
         this.addCommandHandler(showCommandsHandler);
     }
-}
-
-const showCommandsHandler = {commandName: 'commands', commandAction: showCommandsAction, description: 'Shows available commands.'};
-const showCommandsAction = (context, words) => {
-    if (words.length !== 0) return;
-    const { channelId, commands, bot } = context;
-    const messageBeginning = `Available commands: \n\n`;
-    const messageEnd = commands.map(command => {
-        return `!${command.commandName}${command.description ? `: ${command.description}` : ''}`
-    }).join('\n\n');
-    bot.sendMessage({
-        to: channelId,
-        message: `${messageBeginning}${messageEnd}`
-    });
 }

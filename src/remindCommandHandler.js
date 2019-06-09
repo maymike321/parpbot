@@ -1,11 +1,5 @@
 const moment = require('moment');
 
-export const remindCommandHandler = {
-        commandName: 'remind', 
-        commandAction: remindCommandAction,
-        description: 'Sets a reminder for yourself.  \nExample:  \'!remind 1 hour Pick up the kids from school\' will tell the bot to remind you in 1 hour to pick up your kids from school.'
-    };
-    
 const remindCommandAction = (context, words) => {
     const { user, userId, channelId, bot } = context;
     const remindCommand = tryParseRemindCommand(context, words);
@@ -105,3 +99,9 @@ const first = (arr, func) =>
     }
     return undefined;
 }
+
+export const remindCommandHandler = {
+    commandName: 'remind',
+    commandAction: remindCommandAction,
+    description: 'Sets a reminder for yourself.  \nExample:  \'!remind 1 hour Pick up the kids from school\' will tell the bot to remind you in 1 hour to pick up your kids from school.'
+};
