@@ -20,9 +20,9 @@ export const remindCommandHandler = (context, words) => {
                 `<@${userId}> has sent you a reminder: ` 
                 : `Reminder: `;
                 bot.sendMessage({
-                to: remindCommand.userId,
-                message: `${messageBeginning}${remindCommand.message}.`
-            });
+                    to: remindCommand.userId,
+                    message: `${messageBeginning}${remindCommand.message}.`
+                });
         }, remindCommand.parsedTime.diff(moment(), 'miliseconds'));
     }
 }
