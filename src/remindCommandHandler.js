@@ -1,17 +1,17 @@
 const moment = require('moment');
 
 export const remindCommandHandler = (context, words) => {
-    const { user, userId, channelId, commandBot } = context;
+    const { user, userId, channelId, bot } = context;
     const remindCommand = tryParseRemindCommand(context, words);
     if (remindCommand === undefined) return;
     if (remindCommand.username === undefined) {
-        commandBot.sendMessage({
+        bot.sendMessage({
             to: channelId,
             message: `Unable to send reminder.`
         });
     }
     else {
-        commandBot.sendMessage({
+        bot.sendMessage({
             to: channelId,
             message: `Reminding ${remindCommand.username} "${remindCommand.message}" in ${remindCommand.timeAmount} ${remindCommand.timeUnit}`
         });
@@ -19,7 +19,7 @@ export const remindCommandHandler = (context, words) => {
             const messageBeginning = remindCommand.username !== user ? 
                 `<@${userId}> has sent you a reminder: ` 
                 : `Reminder: `;
-            commandBot.sendMessage({
+                bot.sendMessage({
                 to: remindCommand.userId,
                 message: `${messageBeginning}${remindCommand.message}.`
             });
@@ -28,7 +28,7 @@ export const remindCommandHandler = (context, words) => {
 }
 
 const tryParseRemindCommand = (context, words) => {
-    const { user, userId, commandBot } = context;
+    const { user, userId, bot } = context;
     let otherUser;
     let firstValue;
     let otherValues;
@@ -46,9 +46,14 @@ const tryParseRemindCommand = (context, words) => {
     if (attemptedTimeValue === undefined) return undefined;  //We've done all we can here
     return {
         ...attemptedTimeValue,
-        username: otherUser ? commandBot.getUsername(otherUser) : user,
+        username: otherUser ? getUsername(bot, otherUser) : user,
         userId: otherUser ? otherUser : userId
     };
+}
+
+const getUsername = (bot, userId) => {
+    const user = bot.users[userId];
+    return user ? user.username : undefined;
 }
 
 const tryParseTimeValue = (firstValue, otherValues) => {

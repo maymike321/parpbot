@@ -7,14 +7,9 @@ export class CommandBot {
         });
         this.commandHandlerMap = [];
         this.addCommandHandler = (commandName, commandHandler) => this.commandHandlerMap.push({commandName, commandHandler});
-        this.getUsername = userId => {
-            const user = this.bot.users[userId];
-            return user ? user.username : undefined;
-        }
-        this.sendMessage = this.bot.sendMessage.bind(this.bot);
         this.run = () => {
             this.bot.on('message', (user, userId, channelId, message, event) => {
-                const messageContext = {user, userId, channelId, message, event, commandBot: this};
+                const messageContext = {user, userId, channelId, message, event, bot: this.bot};
                 if (message.substring(0, 1) === "!") {
                     const tokenizedMessage = message.split(' ');
                     const givenCommandName = tokenizedMessage[0].substring(1);
