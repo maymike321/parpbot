@@ -1,4 +1,5 @@
 const showCommandsAction = (context, words) => {
+    console.log('here');
     if (words.length !== 0) return;
     const { channelId, commandHandlers, bot } = context;
     const messageBeginning = `Available commands: \n\n`;

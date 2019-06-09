@@ -1,5 +1,5 @@
-const discord = require('discord.io');
-const showCommandsCommandHandler = require('./showCommandsCommandHandler.js');
+import discord from 'discord.io';
+import { showCommandsCommandHandler } from './showCommandsCommandHandler';
 
 export class CommandBot {
     constructor(authToken) {

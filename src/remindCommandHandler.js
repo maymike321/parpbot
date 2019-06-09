@@ -1,4 +1,4 @@
-const moment = require('moment');
+import moment from 'moment';
 
 const remindCommandAction = (context, words) => {
     const { user, userId, channelId, bot } = context;
