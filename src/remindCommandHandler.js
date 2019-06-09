@@ -103,5 +103,5 @@ const first = (arr, func) =>
 export const remindCommandHandler = {
     commandName: 'remind',
     commandAction: remindCommandAction,
-    description: 'Sets a reminder for yourself.  \nExample:  \'!remind 1 hour Pick up the kids from school\' will tell the bot to remind you in 1 hour to pick up your kids from school.'
+    description: 'Sets a reminder for yourself.  Example:  \'!remind 1 hour Pick up the kids from school\' will tell the bot to remind you in 1 hour to pick up your kids from school.'
 };

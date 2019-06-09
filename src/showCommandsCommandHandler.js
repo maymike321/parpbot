@@ -5,7 +5,7 @@ const showCommandsAction = (context, words) => {
     const messageBeginning = `Available commands: \n\n`;
     const messageEnd = commandHandlers.map(commandHandler => {
         return `!${commandHandler.commandName}${commandHandler.description ? `: ${commandHandler.description}` : ''}`
-    }).join('\n\n');
+    }).join('\n');
     bot.sendMessage({
         to: channelId,
         message: `${messageBeginning}${messageEnd}`
