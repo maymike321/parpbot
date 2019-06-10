@@ -2,7 +2,7 @@ import { createParser } from './parser';
 import moment from 'moment';
 
 const userIdParser = (token, wordIndex, words) => {
-    if (token[1] === "@") return token.substring(2, token.length - 2);
+    if (token[1] === "@") return token.substring(2, token.length - 1);
     return;
 }
 
@@ -74,17 +74,16 @@ const remindCommandAction = (context, words) => {
     const { user, userId, channelId, bot } = context;
     const remindCommand = remindCommandParser(words);
     if (!remindCommand.success) return;
-    const userNameToRemind = remindCommand.userId ? getUsername(bot, remindCommand.userId) : user;
     const userToRemind = remindCommand.userId ? remindCommand.userId : userId;
     const timeUnit = remindCommand.timeNumber === 1 ? remindCommand.timeUnit.substring(0, remindCommand.timeUnit.length - 1) : remindCommand.timeUnit;
     const reminder = remindCommand.rest.join(' ');
     bot.sendMessage({
         to: channelId,
-        message: `Reminding ${userNameToRemind} "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`
+        message: `Reminding <@${userToRemind}> "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`
     });
     setTimeout(() => {
-        const messageBeginning = userNameToRemind !== user ?
-        `@<${userToRemind}> has sent you a reminder: ` :
+        const messageBeginning = userToRemind !== userId ?
+        `<@${userId}> has sent you a reminder: ` :
         `Reminder: `;
             bot.sendMessage({
                 to: userToRemind,
@@ -94,6 +93,7 @@ const remindCommandAction = (context, words) => {
 }
 
 const getUsername = (bot, userId) => {
+    console.log(bot.users);
     const user = bot.users[userId];
     return user ? user.username : undefined;
 }

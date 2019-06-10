@@ -6,7 +6,8 @@
     "author": "parp",
     "scripts": {
         "build": "babel src -d lib --copy-files",
-        "start": "npm run build && pm2 start ./lib/bot.js"
+        "start": "npm run build && pm2 start ./lib/bot.js",
+        "test": "NODE_ENV=test mocha '/**/*.spec.js'"
     },
     "dependencies": {
         "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
@@ -17,6 +18,8 @@
         "@babel/cli": "^7.4.4",
         "@babel/core": "^7.4.5",
         "@babel/node": "^7.4.5",
-        "@babel/preset-env": "^7.4.5"
+        "@babel/preset-env": "^7.4.5",
+        "chai": "^4.2.0",
+        "sinon": "^7.3.2"
     }
 }
