@@ -121,13 +121,14 @@ const checkValidity = parsedCustomCommand => {
             error: `Error creating custom command: ${parsedCustomCommand.error}`
         }
     }
-
-    for (let i = 0; i < parsedCustomCommand.tokens.length - 1; i++) {
-        const token = parsedCustomCommand.tokens[i];
-        if (token.type === messageSymbol) {
-            return {
-                valid: false,
-                error: `Message variable must be last variable.`
+    if (parsedCustomCommand.tokens) {
+        for (let i = 0; i < parsedCustomCommand.tokens.length - 1; i++) {
+            const token = parsedCustomCommand.tokens[i];
+            if (token.type === messageSymbol) {
+                return {
+                    valid: false,
+                    error: `Message variable must be last variable.`
+                }
             }
         }
     }
