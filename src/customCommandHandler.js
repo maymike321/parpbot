@@ -131,13 +131,13 @@ const checkValidity = parsedCustomCommand => {
                 }
             }
         }
-    }
 
-    const names = parsedCustomCommand.tokens.map(token => token.name);
-    if ((new Set(names)).size !== names.length) {
-        return {
-            valid: false,
-            error: `Each variable name must be unique.`
+        const names = parsedCustomCommand.tokens.map(token => token.name);
+        if ((new Set(names)).size !== names.length) {
+            return {
+                valid: false,
+                error: `Each variable name must be unique.`
+            }
         }
     }
     
