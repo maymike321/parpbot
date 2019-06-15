@@ -8,15 +8,15 @@ const parseSpecificVariableType = (type, regex) => (token) => {
     };
 }
 
-const word = 'word';
+const wordSymbol = Symbol('word');
 const wordVariableRegex = /\{word\:(.*)\}/g;
-const wordVariableParser = parseSpecificVariableType(word, wordVariableRegex);
-const user = 'user';
+const wordVariableParser = parseSpecificVariableType(wordSymbol, wordVariableRegex);
+const userSymbol = Symbol('user');
 const userVariableRegex = /\{user\:(.*)\}/g;
-const userVariableParser = parseSpecificVariableType(user, userVariableRegex);
-const message = 'message';
+const userVariableParser = parseSpecificVariableType(userSymbol, userVariableRegex);
+const messageSymbol = Symbol('message');
 const messageVariableRegex = /\{message\:(.*)\}/g;
-const messageVariableParser = parseSpecificVariableType(message, messageVariableRegex);
+const messageVariableParser = parseSpecificVariableType(messageSymbol, messageVariableRegex);
 
 const commandNameParser = (token, wordIndex, words) => token[0] === "!" ? token.slice(1) : undefined;
 
@@ -62,7 +62,7 @@ const customCommandAction = (context, words) => {
             commandAction: (newContext, newWords) => {
                 const { channelId } = newContext;
                 const invalidTokens = parsedCustomCommand.tokens.map((token, tokenIndex) => {
-                    if (token.type === user) {
+                    if (token.type === userSymbol) {
                         const username = newWords[tokenIndex];
                         if (!userExists(username, bot)) {
                             return {
@@ -85,7 +85,7 @@ const customCommandAction = (context, words) => {
                 const variables = parsedCustomCommand.tokens.map((token, tokenIndex) => {
                     return {
                         name: token.name,
-                        value: token.type === message ? newWords.slice(tokenIndex) : newWords[tokenIndex]
+                        value: token.type === messageSymbol ? newWords.slice(tokenIndex).join(' ') : newWords[tokenIndex]
                     }
                 });
                 const message = parsedCustomCommand.rest.map(word => {
@@ -124,7 +124,7 @@ const checkValidity = parsedCustomCommand => {
 
     for (let i = 0; i < parsedCustomCommand.tokens.length - 1; i++) {
         const token = parsedCustomCommand.tokens[i];
-        if (token.type === message) {
+        if (token.type === messageSymbol) {
             return {
                 valid: false,
                 error: `Message variable must be last variable.`
@@ -166,5 +166,5 @@ const userExists = (possibleUser, bot) => {
 export const customCommandHandler = {
     commandName: 'create',
     commandAction: customCommandAction,
-    description: 'Creates a custom command.  Syntax is as follows:\n!addcommand !commandname <variables> | <message>\n'
+    description: 'Creates a custom command.  Syntax is as follows:\n!create !commandname <variables> | <message>\n'
 }
