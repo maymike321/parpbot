@@ -28,12 +28,7 @@ const variableParser = (token, wordIndex, words) => {
     if (userResult) return userResult;
 
     const messageResult = messageVariableParser(token);
-    if (messageResult) {
-        if (words.length !== wordIndex + 1) {
-            throw Error("Message variable must be last variable.");
-        }
-        return messageResult;
-    }
+    return messageResult;
 }
 
 const pipeParser = (token, wordIndex, words) => token === "|" ? true : undefined
@@ -124,6 +119,16 @@ const checkValidity = parsedCustomCommand => {
         return {
             valid: false,
             error: `Error creating custom command: ${parsedCustomCommand.error}`
+        }
+    }
+
+    for (let i = 0; i < parsedCustomCommand.tokens.length - 1; i++) {
+        const token = parsedCustomCommand.tokens[i];
+        if (token.type === message) {
+            return {
+                valid: false,
+                error: `Message variable must be last variable.`
+            }
         }
     }
 
