@@ -144,7 +144,7 @@ const checkValidity = parsedCustomCommand => {
         const word = parsedCustomCommand.rest[i];
         if (isVariable(word)) {
             const variableName = word.substring(1, word.length - 1);
-            const variable = parsedCustomCommand.tokens.first(token => token.name === variableName);
+            const variable = parsedCustomCommand.tokens.find(token => token.name === variableName);
             if (!variable) {
                 return {
                     valid: false,
