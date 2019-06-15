@@ -1,9 +1,10 @@
 import { CommandBot } from './commandBot.js';
 import { remindCommandHandler } from './remindCommandHandler.js';
-import { token } from './auth.json';
 import { pretendToTypeCommandHandler } from './pretendToTypeCommandHandler.js';
+import { customCommandHandler } from './customCommandHandler.js';
 
-const commandBot = new CommandBot(token);
+const commandBot = new CommandBot(process.argv[2]);
 commandBot.addCommandHandler(remindCommandHandler);
 commandBot.addCommandHandler(pretendToTypeCommandHandler);
+commandBot.addCommandHandler(customCommandHandler);
 commandBot.run();

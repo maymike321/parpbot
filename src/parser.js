@@ -31,17 +31,17 @@ export const createParser = (...rules) => {
                     }
                     const nextToken = words[wordIndex];
                     const nextParsedToken = rule.tokenParser(nextToken, wordIndex, words);
-                    wordIndex++;
                     if (nextParsedToken === undefined) break;
+                    wordIndex++;
                     repeatingResult.push(nextParsedToken);
                 }
-                result[rule.resultName] = repeatingResult;
+                if (rule.resultName) result[rule.resultName] = repeatingResult;
             }
             else {
-                result[rule.resultName] = parsedToken;
+                if (rule.resultName) result[rule.resultName] = parsedToken;
             }
         }
-        result['rest'] = words.slice(wordIndex);
+        result.rest = words.slice(wordIndex);
         result.success = true;
         return result;
     }

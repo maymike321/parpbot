@@ -71,7 +71,7 @@ const remindCommandParser = createParser({
 });
 
 const remindCommandAction = (context, words) => {
-    const { user, userId, channelId, bot } = context;
+    const { userId, channelId, bot } = context;
     const remindCommand = remindCommandParser(words);
     if (!remindCommand.success) return;
     const userToRemind = remindCommand.userId ? remindCommand.userId : userId;
@@ -90,12 +90,6 @@ const remindCommandAction = (context, words) => {
                 message: `${messageBeginning}${reminder}`
             });
     }, moment().add(remindCommand.timeNumber, timeUnit).diff(moment(), 'miliseconds'));
-}
-
-const getUsername = (bot, userId) => {
-    console.log(bot.users);
-    const user = bot.users[userId];
-    return user ? user.username : undefined;
 }
 
 export const remindCommandHandler = {
