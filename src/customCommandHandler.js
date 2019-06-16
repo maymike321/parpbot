@@ -68,7 +68,7 @@ const customCommandAction = (context, words) => {
                         if (!userExists(username, bot)) {
                             return {
                                 valid: false,
-                                error: `Expected user at position ${tokenIndex} but instead got ${username}`
+                                error: `Expected user but instead got ${username}`
                             }
                         }
                     }
