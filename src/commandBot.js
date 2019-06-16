@@ -8,9 +8,8 @@ export class CommandBot {
         });
         this.commandHandlers = [];
         this.addCommandHandler = (commandHandler) => {
-            const { commandName, commandAction, description } = commandHandler;
-            if (this.commandHandlers.some(command => command.commandName == commandName)) throw Error(`Command ${commandName} already registered!`);
-            this.commandHandlers.push({commandName, commandAction, description});
+            if (this.commandHandlers.some(command => command.commandName == commandHandler.commandName)) throw Error(`Command ${commandName} already registered!`);
+            this.commandHandlers.push(commandHandler);
         };
         this.run = () => {
             this.bot.on('message', (user, userId, channelId, message, event) => {
