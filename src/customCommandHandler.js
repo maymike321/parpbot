@@ -110,7 +110,7 @@ const customCommandAction = (context, words) => {
     catch(e) {
         bot.sendMessage({
             to: context.channelId,
-            message: `Error creating custom command: ${e}`
+            message: `${e}`
         });
     }
 }
