@@ -99,7 +99,7 @@ const customCommandAction = (context, words) => {
                     message
                 });
             },
-            description: `Custom command.  Template: ${words.slice(10, tokens.length + 1).join(' ') || 'none'}.  Response: ${parsedCustomCommand.rest.join(' ')}`,
+            description: `Custom command.  Template: ${words.slice(1, tokens.length + 1).join(' ') || 'none'}.  Response: ${parsedCustomCommand.rest.join(' ')}`,
             custom: true
         });
         bot.sendMessage({
