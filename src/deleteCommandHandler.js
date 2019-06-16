@@ -2,16 +2,16 @@ const deleteCommandAction = (context, words) => {
     const { channelId, bot, commandBot } = context;
     if (words.length !== 1) return;
     const commandNameToDelete = words[0].substring(1).toLowerCase();
-    const matchingCommandHandlers = commandBot.commandHandlers
+    const matchingCommandHandler = commandBot.commandHandlers
         .find(commandHandler => commandHandler.commandName === commandNameToDelete);
-    if (matchingCommandHandlers === undefined) {
+    if (matchingCommandHandler === undefined) {
         bot.sendMessage({
             to: channelId,
             message: `Command !${commandNameToDelete} does not exist.`
         });
         return;
     }
-    if (!matchingCommandHandlers[0].custom) {
+    if (!matchingCommandHandler.custom) {
         bot.sendMessage({
             to: channelId,
             message: `Delete can only be used to delete custom commands.`

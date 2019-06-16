@@ -8,7 +8,7 @@ export class CommandBot {
         });
         this.commandHandlers = [];
         this.addCommandHandler = (commandHandler) => {
-            if (this.commandHandlers.some(command => command.commandName == commandHandler.commandName)) throw Error(`Command ${commandName} already registered!`);
+            if (this.commandHandlers.some(command => command.commandName === commandHandler.commandName)) throw Error(`Command ${commandHandler.commandName} already registered!`);
             this.commandHandlers.push(commandHandler);
         };
         this.run = () => {
