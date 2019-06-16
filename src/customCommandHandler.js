@@ -57,11 +57,11 @@ const customCommandAction = (context, words) => {
             });
             return;
         }
+        const tokens = parsedCustomCommand.tokens || [];
         commandBot.addCommandHandler({
             commandName: parsedCustomCommand.commandName.toLowerCase(),
             commandAction: (newContext, newWords) => {
                 const { channelId } = newContext;
-                const tokens = parsedCustomCommand.tokens || [];
                 const invalidTokens = tokens.map((token, tokenIndex) => {
                     if (token.type === userSymbol) {
                         const username = newWords[tokenIndex];
