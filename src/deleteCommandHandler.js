@@ -11,6 +11,13 @@ const deleteCommandAction = (context, words) => {
         });
         return;
     }
+    if (!matchingCommandHandlers[0].custom) {
+        bot.sendMessage({
+            to: channelId,
+            message: `Delete can only be used to delete custom commands.`
+        });
+        return;
+    }
     commandBot.commandHandlers = commandBot.commandHandlers.filter(commandHandler => commandHandler.commandName !== commandNameToDelete);
     bot.sendMessage({
         to: channelId,
