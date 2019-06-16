@@ -1,7 +1,7 @@
 import { createParser } from './parser';
 
 const parseSpecificVariableType = (type, regex) => (token) => {
-    const matchResult = regex.exec(token);
+    const matchResult = token.match(regex);
     if (matchResult && matchResult.length === 2) return {
         type,
         name: matchResult[1]
@@ -9,13 +9,13 @@ const parseSpecificVariableType = (type, regex) => (token) => {
 }
 
 const wordSymbol = Symbol('word');
-const wordVariableRegex = /\{word\:(.*)\}/g;
+const wordVariableRegex = /\{word\:(.*)\}/;
 const wordVariableParser = parseSpecificVariableType(wordSymbol, wordVariableRegex);
 const userSymbol = Symbol('user');
-const userVariableRegex = /\{user\:(.*)\}/g;
+const userVariableRegex = /\{user\:(.*)\}/;
 const userVariableParser = parseSpecificVariableType(userSymbol, userVariableRegex);
 const messageSymbol = Symbol('message');
-const messageVariableRegex = /\{message\:(.*)\}/g;
+const messageVariableRegex = /\{message\:(.*)\}/;
 const messageVariableParser = parseSpecificVariableType(messageSymbol, messageVariableRegex);
 
 const commandNameParser = (token, wordIndex, words) => token[0] === "!" ? token.slice(1) : undefined;
