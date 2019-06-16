@@ -61,7 +61,8 @@ const customCommandAction = (context, words) => {
             commandName: parsedCustomCommand.commandName.toLowerCase(),
             commandAction: (newContext, newWords) => {
                 const { channelId } = newContext;
-                const invalidTokens = parsedCustomCommand.tokens.map((token, tokenIndex) => {
+                const tokens = parsedCustomCommand.tokens || [];
+                const invalidTokens = tokens.map((token, tokenIndex) => {
                     if (token.type === userSymbol) {
                         const username = newWords[tokenIndex];
                         if (!userExists(username, bot)) {
@@ -82,7 +83,7 @@ const customCommandAction = (context, words) => {
                     });
                     return;
                 }
-                const variables = parsedCustomCommand.tokens.map((token, tokenIndex) => {
+                const variables = tokens.map((token, tokenIndex) => {
                     return {
                         name: token.name,
                         value: token.type === messageSymbol ? newWords.slice(tokenIndex).join(' ') : newWords[tokenIndex]
@@ -121,23 +122,22 @@ const checkValidity = parsedCustomCommand => {
             error: `Error creating custom command: ${parsedCustomCommand.error}`
         }
     }
-    if (parsedCustomCommand.tokens) {
-        for (let i = 0; i < parsedCustomCommand.tokens.length - 1; i++) {
-            const token = parsedCustomCommand.tokens[i];
-            if (token.type === messageSymbol) {
-                return {
-                    valid: false,
-                    error: `Message variable must be last variable.`
-                }
-            }
-        }
-
-        const names = parsedCustomCommand.tokens.map(token => token.name);
-        if ((new Set(names)).size !== names.length) {
+    const tokens = parsedCustomCommand.tokens || [];
+    for (let i = 0; i < tokens.length - 1; i++) {
+        const token = parsedCustomCommand.tokens[i];
+        if (token.type === messageSymbol) {
             return {
                 valid: false,
-                error: `Each variable name must be unique.`
+                error: `Message variable must be last variable.`
             }
+        }
+    }
+
+    const names = tokens.map(token => token.name);
+    if ((new Set(names)).size !== names.length) {
+        return {
+            valid: false,
+            error: `Each variable name must be unique.`
         }
     }
     
@@ -145,7 +145,7 @@ const checkValidity = parsedCustomCommand => {
         const word = parsedCustomCommand.rest[i];
         if (isVariable(word)) {
             const variableName = word.substring(1, word.length - 1);
-            const variable = parsedCustomCommand.tokens.find(token => token.name === variableName);
+            const variable = tokens.find(token => token.name === variableName);
             if (!variable) {
                 return {
                     valid: false,
