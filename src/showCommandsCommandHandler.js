@@ -4,7 +4,7 @@ const showCommandsAction = (context, words) => {
     const messageBeginning = `\`Available commands: \n\n`;
     const messageEnd = commandBot.commandHandlers.map(commandHandler => {
         const prefix = commandHandler.custom ? 'Custom command.  ' : '';
-        return `!${commandHandler.commandName} ${prefix}${commandHandler.description ? `:${commandHandler.description}` : ''}`
+        return `!${commandHandler.commandName}: ${prefix}${commandHandler.description ? `${commandHandler.description}` : ''}`
     }).join('\n');
     bot.sendMessage({
         to: channelId,
