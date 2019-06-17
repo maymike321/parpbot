@@ -1,6 +1,6 @@
 const deleteCommandAction = (context, words) => {
     const { channelId, bot, commandBot } = context;
-    if (words.length !== 1) return;
+    if (words.length !== 1 || words[0] !== "!") return;
     const commandNameToDelete = words[0].substring(1).toLowerCase();
     const matchingCommandHandler = commandBot.commandHandlers
         .find(commandHandler => commandHandler.commandName === commandNameToDelete);

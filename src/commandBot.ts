@@ -1,8 +1,13 @@
 import discord from 'discord.io';
 import { showCommandsCommandHandler } from './showCommandsCommandHandler';
 
+
 export class CommandBot {
-    constructor(authToken) {
+    bot: discord.Client;
+    commandHandlers: any[];
+    addCommandHandler: (commandHandler: any) => void;
+    run: () => void;
+    constructor(authToken: string) {
         this.bot = new discord.Client({
             token: authToken
         });

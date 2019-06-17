@@ -49,7 +49,7 @@ const customCommandAction = (context, words) => {
     const { bot, commandBot } = context;
     try {
         const parsedCustomCommand = customCommandParser(words);
-        const validity = checkValidity(parsedCustomCommand);
+        const validity = checkValidityOfCustomCommand(parsedCustomCommand);
         if (!validity.valid) {
             bot.sendMessage({
                 to: context.channelId,
@@ -62,26 +62,12 @@ const customCommandAction = (context, words) => {
             commandName: parsedCustomCommand.commandName.toLowerCase(),
             commandAction: (newContext, newWords) => {
                 const { channelId } = newContext;
-                const invalidTokens = tokens.map((token, tokenIndex) => {
-                    if (token.type === userSymbol) {
-                        const username = newWords[tokenIndex];
-                        if (!userExists(username, bot)) {
-                            return {
-                                valid: false,
-                                error: `Expected user but instead got ${username}`
-                            }
-                        }
-                    }
-                    return {
-                        valid: true
-                    }
-                }).filter(validity => !validity.valid);
-                if (invalidTokens.length > 0) {
+                const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words);
+                if (!validityOfExecutedCommand.valid) {
                     bot.sendMessage({
                         to: channelId,
-                        message: invalidTokens[0].error
-                    });
-                    return;
+                        message: validityOfExecutedCommand.error
+                    })
                 }
                 const variables = tokens.map((token, tokenIndex) => {
                     return {
@@ -117,7 +103,7 @@ const customCommandAction = (context, words) => {
 
 const isVariable = word => word.startsWith("{") && word.endsWith("}");
 
-const checkValidity = parsedCustomCommand => {
+const checkValidityOfCustomCommand = parsedCustomCommand => {
     if (!parsedCustomCommand.success) {
         return {
             valid: false,
@@ -158,6 +144,32 @@ const checkValidity = parsedCustomCommand => {
     }
     return {
         valid: true
+    }
+}
+
+const checkValidityOfExecutedCustomCommand = (tokens, newWords, words) => {
+    if (tokens.length > newWords.length) {
+        return {
+            valid: false,
+            message: `Unable to parse command.  Template:  ${words.slice(1, tokens.length + 1).join(' ')}`
+        }
+    }
+    const invalidTokens = tokens.map((token, tokenIndex) => {
+        if (token.type === userSymbol) {
+            const username = newWords[tokenIndex];
+            if (!userExists(username, bot)) {
+                return {
+                    valid: false,
+                    error: `Expected user but instead got ${username}`
+                }
+            }
+        }
+        return {
+            valid: true
+        }
+    }).filter(validity => !validity.valid);
+    if (invalidTokens.length > 0) {
+        return invalidTokens[0];
     }
 }
 
