@@ -1,12 +1,20 @@
-import { createParser } from './parser';
+import discord from 'discord.io';
+import { createParser, Parser } from './parser';
+import { CommandAction } from './commandBot';
 
-const parseSpecificVariableType = (type, regex) => (token) => {
-    const matchResult = token.match(regex);
-    if (matchResult && matchResult.length === 2) return {
-        type,
-        name: matchResult[1]
-    };
+type Token = {
+    type: Symbol,
+    name: string
 }
+
+const parseSpecificVariableType: (type: Symbol, regex: RegExp) => (token: string) => Token
+    = (type: Symbol, regex: RegExp) => (token: string) => {
+        const matchResult = token.match(regex);
+        if (matchResult && matchResult.length === 2) return {
+                    type,
+                    name: matchResult[1]
+                };
+            }
 
 const wordSymbol = Symbol('word');
 const wordVariableRegex = /\{word\:(.*)\}/;
@@ -18,9 +26,9 @@ const messageSymbol = Symbol('message');
 const messageVariableRegex = /\{message\:(.*)\}/;
 const messageVariableParser = parseSpecificVariableType(messageSymbol, messageVariableRegex);
 
-const commandNameParser = (token, wordIndex, words) => token[0] === "!" ? token.slice(1) : undefined;
+const commandNameParser: Parser = (token, wordIndex, words) => token[0] === "!" ? token.slice(1) : undefined;
 
-const variableParser = (token, wordIndex, words) => {
+const variableParser: Parser = (token, wordIndex, words) => {
     const wordResult = wordVariableParser(token);
     if (wordResult) return wordResult;
 
@@ -31,7 +39,7 @@ const variableParser = (token, wordIndex, words) => {
     return messageResult;
 }
 
-const pipeParser = (token, wordIndex, words) => token === "|" ? true : undefined
+const pipeParser: Parser = (token, wordIndex, words) => token === "|" ? true : undefined
 
 const customCommandParser = createParser({
     tokenParser: commandNameParser,
@@ -45,7 +53,7 @@ const customCommandParser = createParser({
     tokenParser: pipeParser
 });
 
-const customCommandAction = (context, words) => {
+const customCommandAction: CommandAction = (context, words) => {
     const { bot, commandBot } = context;
     try {
         const parsedCustomCommand = customCommandParser(words);
@@ -57,12 +65,12 @@ const customCommandAction = (context, words) => {
             });
             return;
         }
-        const tokens = parsedCustomCommand.tokens || [];
+        const tokens = parsedCustomCommand.tokens as Token[] || [];
         commandBot.addCommandHandler({
             commandName: parsedCustomCommand.commandName.toLowerCase(),
             commandAction: (newContext, newWords) => {
                 const { channelId } = newContext;
-                const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words);
+                const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, bot);
                 if (!validityOfExecutedCommand.valid) {
                     bot.sendMessage({
                         to: channelId,
@@ -75,7 +83,7 @@ const customCommandAction = (context, words) => {
                         value: token.type === messageSymbol ? newWords.slice(tokenIndex).join(' ') : newWords[tokenIndex]
                     }
                 });
-                const message = parsedCustomCommand.rest.map(word => {
+                const message = parsedCustomCommand.rest.map((word: string) => {
                     return variables
                         .reduce((currentWords, variable) => currentWords.replace(new RegExp(`{${variable.name}}`, 'g'), variable.value), word)
                         .replace(/\\{/g, "{").replace(/\\}/g, "}");
@@ -101,9 +109,9 @@ const customCommandAction = (context, words) => {
     }
 }
 
-const isVariable = word => word.startsWith("{") && word.endsWith("}");
+const isVariable = (word: string) => word.startsWith("{") && word.endsWith("}");
 
-const checkValidityOfCustomCommand = parsedCustomCommand => {
+const checkValidityOfCustomCommand = (parsedCustomCommand: { success: any; error: any; tokens: any[]; rest: any[]; }) => {
     if (!parsedCustomCommand.success) {
         return {
             valid: false,
@@ -147,11 +155,11 @@ const checkValidityOfCustomCommand = parsedCustomCommand => {
     }
 }
 
-const checkValidityOfExecutedCustomCommand = (tokens, newWords, words) => {
+const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[], words: string[], bot: discord.Client) => {
     if (tokens.length > newWords.length) {
         return {
             valid: false,
-            message: `Unable to parse command.  Template:  ${words.slice(1, tokens.length + 1).join(' ')}`
+            error: `Unable to parse command.  Template:  ${words.slice(1, tokens.length + 1).join(' ')}`
         }
     }
     const invalidTokens = tokens.map((token, tokenIndex) => {
@@ -173,7 +181,7 @@ const checkValidityOfExecutedCustomCommand = (tokens, newWords, words) => {
     }
 }
 
-const userExists = (possibleUser, bot) => {
+const userExists = (possibleUser: string, bot: discord.Client) => {
     const userId = possibleUser.substring(2, possibleUser.length - 1);
     return bot.users[userId] != undefined;
 }

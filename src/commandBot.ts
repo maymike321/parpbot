@@ -1,11 +1,29 @@
 import discord from 'discord.io';
 import { showCommandsCommandHandler } from './showCommandsCommandHandler';
 
+export type CommandHandler = {
+    commandName: string,
+    commandAction: CommandAction,
+    description: string,
+    custom?: boolean
+}
+
+export type CommandAction = (context: Context, words: string[]) => void;
+
+export type Context = {
+    user: string,
+    userId: string,
+    channelId: string,
+    message: string,
+    event: any,
+    bot: discord.Client,
+    commandBot: CommandBot
+}
 
 export class CommandBot {
     bot: discord.Client;
-    commandHandlers: any[];
-    addCommandHandler: (commandHandler: any) => void;
+    commandHandlers: CommandHandler[];
+    addCommandHandler: (commandHandler: CommandHandler) => void;
     run: () => void;
     constructor(authToken: string) {
         this.bot = new discord.Client({

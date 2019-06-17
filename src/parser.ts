@@ -1,11 +1,18 @@
+export type Parser = (token: string, wordIndex: number, words: string[]) => any
+export type Rule = {
+    tokenParser: Parser,
+    optional?: boolean,
+    repeating?: boolean,
+    resultName?: string
+}
 //rule looks like { tokenParser, optional, repeating, resultName }
 //tokenParser takes in the token, its position, and a list of all tokens.  Its return value is attached to the resultName on the rule.  It should return undefined when unable to parse.
 //Optional determines if the rule is optional.  Rules that are not optional must be satisfied or the parsing will fail.
 //Repeating determines if the rule repeats.  The parser will continually try to apply the rule until it can't.  If repeating, then resultName will contain an array of results instead of one.
 //Once all rules are exhausted, every subsequent token is placed in the "rest" property.
-export const createParser = (...rules) => {
-    return words => {
-        let result = {};
+export const createParser = (...rules: Rule[]) => {
+    return (words: string[]) => {
+        let result: any = {};
         let wordIndex = 0;
         for (let ruleIndex = 0; ruleIndex < rules.length; ruleIndex++) {
             const rule = rules[ruleIndex];

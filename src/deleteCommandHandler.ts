@@ -1,4 +1,6 @@
-const deleteCommandAction = (context, words) => {
+import { CommandAction, CommandHandler } from "./commandBot";
+
+const deleteCommandAction: CommandAction = (context, words) => {
     const { channelId, bot, commandBot } = context;
     if (words.length !== 1 || words[0] !== "!") return;
     const commandNameToDelete = words[0].substring(1).toLowerCase();
@@ -25,7 +27,7 @@ const deleteCommandAction = (context, words) => {
     });
 }
 
-export const deleteCommandHandler = {
+export const deleteCommandHandler: CommandHandler = {
     commandName: 'delete',
     commandAction: deleteCommandAction,
     description: 'Deletes a custom command.  Example: !delete !yell would delete the custom command !yell.'

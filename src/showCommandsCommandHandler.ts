@@ -1,4 +1,6 @@
-const showCommandsAction = (context, words) => {
+import { CommandAction, CommandHandler } from "./commandBot";
+
+const showCommandsAction: CommandAction = (context, words) => {
     if (words.length !== 0) return;
     const { channelId, bot, commandBot } = context;
     const messageBeginning = `\`Available commands: \n\n`;
@@ -12,4 +14,4 @@ const showCommandsAction = (context, words) => {
     });
 }
 
-export const showCommandsCommandHandler = {commandName: 'commands', commandAction: showCommandsAction, description: 'Shows available commands.'};
+export const showCommandsCommandHandler: CommandHandler = {commandName: 'commands', commandAction: showCommandsAction, description: 'Shows available commands.'};

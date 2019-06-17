@@ -1,13 +1,14 @@
-import { createParser } from './parser';
+import { createParser, Parser } from './parser';
 import moment from 'moment';
+import { CommandAction, CommandHandler } from './commandBot';
 
-const userIdParser = (token, wordIndex, words) => {
+const userIdParser: Parser = (token, wordIndex, words) => {
     if (token[1] === "@") return token.substring(2, token.length - 1);
     return;
 }
 
-const numberParser = (token, wordIndex, words) => {
-    if (isNaN(token)) return;
+const numberParser: Parser = (token, wordIndex, words) => {
+    if (isNaN(token as any)) return;
     return parseInt(token);
 }
 
@@ -19,7 +20,7 @@ const weeks = 'weeks';
 const months = 'months';
 const years = 'years';
 
-const unitParser = (token, wordIndex, words) => {
+const unitParser: Parser = (token, wordIndex, words) => {
     switch (token) {
         case 's':
         case 'sec':
@@ -70,7 +71,7 @@ const remindCommandParser = createParser({
     resultName: 'timeUnit'
 });
 
-const remindCommandAction = (context, words) => {
+const remindCommandAction: CommandAction = (context, words) => {
     const { userId, channelId, bot } = context;
     const remindCommand = remindCommandParser(words);
     if (!remindCommand.success) return;
@@ -89,10 +90,10 @@ const remindCommandAction = (context, words) => {
                 to: userToRemind,
                 message: `${messageBeginning}${reminder}`
             });
-    }, moment().add(remindCommand.timeNumber, timeUnit).diff(moment(), 'miliseconds'));
+    }, moment().add(remindCommand.timeNumber, timeUnit).diff(moment(), 'milliseconds'));
 }
 
-export const remindCommandHandler = {
+export const remindCommandHandler: CommandHandler = {
     commandName: 'remind',
     commandAction: remindCommandAction,
     description: 'Sets a reminder for yourself.  Example:  \'!remind 1 hour Pick up the kids from school\' will tell the bot to remind you in 1 hour to pick up your kids from school.'
