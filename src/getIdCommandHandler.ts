@@ -10,7 +10,7 @@ const getIdCommandAction: CommandAction = (context, words) => {
         return;
     }
     const possibleUser = words[0];
-    if (words.length !== 1 || (!possibleUser.startsWith("@<") || !possibleUser.endsWith(">"))) {
+    if (words.length !== 1 || (!possibleUser.startsWith("<@") || !possibleUser.endsWith(">"))) {
         bot.sendMessage({
             to: channelId,
             message: `Usage:  !getId @user`
