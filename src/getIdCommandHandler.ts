@@ -24,7 +24,7 @@ const getIdCommandAction: CommandAction = (context, words) => {
 }
 
 export const getIdCommandHandler: CommandHandler = {
-    commandName: 'getId',
+    commandName: 'getid',
     commandAction: getIdCommandAction,
     description: 'Gets the id of a given user.'
 }

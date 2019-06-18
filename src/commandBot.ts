@@ -49,7 +49,7 @@ export class CommandBot {
                     const givenCommandName = tokenizedMessage[0].substring(1).toLowerCase();
                     this.commandHandlers.forEach(commandHandler => {
                         const { commandName, commandAction } = commandHandler;
-                        if (commandName === givenCommandName) {
+                        if (commandName.toLowerCase() === givenCommandName) {
                             commandAction(messageContext, tokenizedMessage.slice(1));
                         }
                     });
