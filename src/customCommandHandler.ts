@@ -75,7 +75,8 @@ const customCommandAction: CommandAction = (context, words) => {
                     bot.sendMessage({
                         to: channelId,
                         message: validityOfExecutedCommand.error
-                    })
+                    });
+                    return;
                 }
                 const variables = tokens.map((token, tokenIndex) => {
                     return {
