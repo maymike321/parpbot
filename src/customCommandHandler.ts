@@ -1,6 +1,6 @@
 import discord from 'discord.io';
 import { createParser, Parser } from './parser';
-import { CommandAction } from './commandBot';
+import { CommandAction, CommandHandler } from './commandBot';
 
 type Token = {
     type: Symbol,
@@ -119,7 +119,7 @@ const checkValidityOfCustomCommand = (parsedCustomCommand: { success: any; error
             error: `Error creating custom command: ${parsedCustomCommand.error}`
         }
     }
-    const tokens = parsedCustomCommand.tokens || [];
+    const tokens = parsedCustomCommand.tokens as Token[] || [];
     for (let i = 0; i < tokens.length - 1; i++) {
         const token = parsedCustomCommand.tokens[i];
         if (token.type === messageSymbol) {
@@ -187,7 +187,7 @@ const userExists = (possibleUser: string, bot: discord.Client) => {
     return bot.users[userId] != undefined;
 }
 
-export const customCommandHandler = {
+export const customCommandHandler: CommandHandler = {
     commandName: 'create',
     commandAction: customCommandAction,
     description: 'Creates a custom command.  Syntax is as follows:\n\t!create !commandname <variables> | <response>\n\tExample:  !create !yell {word:w} {user:u} {message:m} | {p} {u}, {m}! creates a command !yell, which can be used like !yell Hey @para you\'re a nerd, which causes the bot to say \"Hey @para, you\'re a nerd!".\n\tThree types of variables:  word, which is a single word; user, which is a discord user; and message, which is one or more words at the end of the command.'
