@@ -180,6 +180,9 @@ const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[
     if (invalidTokens.length > 0) {
         return invalidTokens[0];
     }
+    return {
+        valid: true
+    }
 }
 
 const userExists = (possibleUser: string, bot: discord.Client) => {
