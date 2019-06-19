@@ -1,9 +1,9 @@
 import { CommandAction, CommandHandler } from "./commandBot";
 
 const getIdCommandAction: CommandAction = (context, words) => {
-    const { userId, channelId, bot } = context;
+    const { userId, channelId, commandBot } = context;
     if (words.length === 0) {
-        bot.sendMessage({
+        commandBot.sendMessage({
             to: channelId,
             message: `Your user id is ${userId}`
         });
@@ -11,13 +11,13 @@ const getIdCommandAction: CommandAction = (context, words) => {
     }
     const possibleUser = words[0];
     if (words.length !== 1 || (!possibleUser.startsWith("<@") || !possibleUser.endsWith(">"))) {
-        bot.sendMessage({
+        commandBot.sendMessage({
             to: channelId,
             message: `Usage:  !getId @user`
         });
         return;
     }
-    bot.sendMessage({
+    commandBot.sendMessage({
         to: channelId,
         message: `${possibleUser}'s user id is: ${possibleUser.substring(2, possibleUser.length - 1)}`
     });

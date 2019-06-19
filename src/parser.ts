@@ -54,4 +54,4 @@ export const createParser = (...rules: Rule[]) => {
     }
 }
 
-const createFailedToParseError = (token, wordIndex) => `Failed to parse token ${token} at position ${wordIndex}`;
+const createFailedToParseError = (token: string, wordIndex: number) => `Failed to parse token ${token} at position ${wordIndex}`;

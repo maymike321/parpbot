@@ -16,33 +16,28 @@ export type Context = {
     channelId: string,
     message: string,
     event: any,
-    bot: discord.Client,
     commandBot: CommandBot
 }
 
-export class CommandBot {
-    bot: discord.Client;
+export class CommandBot extends discord.Client {
     commandHandlers: CommandHandler[];
     addCommandHandler: (commandHandler: CommandHandler) => void;
     run: () => void;
     constructor(authToken: string) {
-        this.bot = new discord.Client({
-            token: authToken
-        });
+        super({token: authToken});
         this.commandHandlers = [];
         this.addCommandHandler = (commandHandler) => {
             if (this.commandHandlers.some(command => command.commandName === commandHandler.commandName)) throw Error(`Command ${commandHandler.commandName} already registered!`);
             this.commandHandlers.push(commandHandler);
         };
         this.run = () => {
-            this.bot.on('message', (user, userId, channelId, message, event) => {
+            this.on('message', (user, userId, channelId, message, event) => {
                 const messageContext = {
                     user,
                     userId,
                     channelId,
                     message,
                     event,
-                    bot: this.bot,
                     commandBot: this};
                 if (message.substring(0, 1) === "!") {
                     const tokenizedMessage = message.split(' ');
@@ -55,7 +50,7 @@ export class CommandBot {
                     });
                 }
             });
-            this.bot.connect();
+            this.connect();
         }
 
         this.addCommandHandler(showCommandsCommandHandler);

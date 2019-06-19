@@ -54,12 +54,12 @@ const customCommandParser = createParser({
 });
 
 const customCommandAction: CommandAction = (context, words) => {
-    const { bot, commandBot } = context;
+    const { commandBot } = context;
     try {
         const parsedCustomCommand = customCommandParser(words);
         const validity = checkValidityOfCustomCommand(parsedCustomCommand);
         if (!validity.valid) {
-            bot.sendMessage({
+            commandBot.sendMessage({
                 to: context.channelId,
                 message: validity.error
             });
@@ -70,9 +70,9 @@ const customCommandAction: CommandAction = (context, words) => {
             commandName: parsedCustomCommand.commandName.toLowerCase(),
             commandAction: (newContext, newWords) => {
                 const { channelId } = newContext;
-                const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, bot);
+                const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, commandBot);
                 if (!validityOfExecutedCommand.valid) {
-                    bot.sendMessage({
+                    commandBot.sendMessage({
                         to: channelId,
                         message: validityOfExecutedCommand.error
                     });
@@ -89,7 +89,7 @@ const customCommandAction: CommandAction = (context, words) => {
                         .reduce((currentWords, variable) => currentWords.replace(new RegExp(`{${variable.name}}`, 'g'), variable.value), word)
                         .replace(/\\{/g, "{").replace(/\\}/g, "}");
                 }).join(' ');
-                bot.sendMessage({
+                commandBot.sendMessage({
                     to: channelId,
                     message
                 });
@@ -97,13 +97,13 @@ const customCommandAction: CommandAction = (context, words) => {
             description: `Template: ${words.slice(1, tokens.length + 1).join(' ') || 'none'}.  Response: ${parsedCustomCommand.rest.join(' ')}`,
             custom: true
         });
-        bot.sendMessage({
+        commandBot.sendMessage({
             to: context.channelId,
             message: `Custom command !${parsedCustomCommand.commandName} was successfully created.`
         })
     }
     catch(e) {
-        bot.sendMessage({
+        commandBot.sendMessage({
             to: context.channelId,
             message: `${e}`
         });
