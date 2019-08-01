@@ -1,11 +1,13 @@
-import { CommandBot } from './commandBot.js';
-import { remindCommandHandler } from './remindCommandHandler.js';
-import { pretendToTypeCommandHandler } from './pretendToTypeCommandHandler.js';
-import { customCommandHandler } from './customCommandHandler.js';
-import { deleteCommandHandler } from './deleteCommandHandler.js';
-import { getIdCommandHandler } from './getIdCommandHandler.js';
+import { CommandBot } from './commandBot';
+import { showCommandsCommandHandler } from './showCommandsCommandHandler'
+import { remindCommandHandler } from './remindCommandHandler';
+import { pretendToTypeCommandHandler } from './pretendToTypeCommandHandler';
+import { customCommandHandler } from './customCommandHandler';
+import { deleteCommandHandler } from './deleteCommandHandler';
+import { getIdCommandHandler } from './getIdCommandHandler';
 
 const commandBot = new CommandBot(process.argv[2]);
+commandBot.addCommandHandler(showCommandsCommandHandler);
 commandBot.addCommandHandler(remindCommandHandler);
 commandBot.addCommandHandler(pretendToTypeCommandHandler);
 commandBot.addCommandHandler(customCommandHandler);

@@ -28,6 +28,7 @@ const unitParser: Parser = (token, wordIndex, words) => {
         case 'seconds':
             return seconds;
         case 'min':
+        case 'mins':
         case 'minute':
         case 'minutes':
             return minutes;

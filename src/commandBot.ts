@@ -1,5 +1,4 @@
 import discord from 'discord.io';
-import { showCommandsCommandHandler } from './showCommandsCommandHandler';
 
 export type CommandHandler = {
     commandName: string,
@@ -52,7 +51,5 @@ export class CommandBot extends discord.Client {
             });
             this.connect();
         }
-
-        this.addCommandHandler(showCommandsCommandHandler);
     }
 }
