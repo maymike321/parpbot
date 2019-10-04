@@ -22,8 +22,10 @@ export class CommandBot extends discord.Client {
     commandHandlers: CommandHandler[];
     addCommandHandler: (commandHandler: CommandHandler) => void;
     run: () => void;
+    setPrefix: (prefix: string) => void;
     constructor(authToken: string) {
         super({token: authToken});
+        let messagePrefix: string = '!';
         this.commandHandlers = [];
         this.addCommandHandler = (commandHandler) => {
             if (this.commandHandlers.some(command => command.commandName === commandHandler.commandName)) throw Error(`Command ${commandHandler.commandName} already registered!`);
@@ -38,7 +40,7 @@ export class CommandBot extends discord.Client {
                     message,
                     event,
                     commandBot: this};
-                if (message.substring(0, 1) === "!") {
+                if (message.substring(0, 1) === messagePrefix) {
                     const tokenizedMessage = message.split(' ');
                     const givenCommandName = tokenizedMessage[0].substring(1).toLowerCase();
                     this.commandHandlers.forEach(commandHandler => {
@@ -51,5 +53,6 @@ export class CommandBot extends discord.Client {
             });
             this.connect();
         }
+        this.setPrefix = (prefix) => messagePrefix = prefix;
     }
 }
