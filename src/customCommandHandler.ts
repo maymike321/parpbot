@@ -67,7 +67,7 @@ const customCommandAction: CommandAction = (message, words, commandBot) => {
             commandAction: (newMessage, newWords, newCommandBot) => {
                 const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, commandBot);
                 if (!validityOfExecutedCommand.valid) {
-                    newmessage.channel.send(validityOfExecutedCommand.error);
+                    newMessage.channel.send(validityOfExecutedCommand.error);
                     return;
                 }
                 const variables = tokens.map((token, tokenIndex) => {
@@ -81,7 +81,7 @@ const customCommandAction: CommandAction = (message, words, commandBot) => {
                         .reduce((currentWords, variable) => currentWords.replace(new RegExp(`{${variable.name}}`, 'g'), variable.value), word)
                         .replace(/\\{/g, "{").replace(/\\}/g, "}");
                 }).join(' ');
-                newmessage.channel.send(message);
+                newMessage.channel.send(message);
             },
             description: `Template: ${words.slice(1, tokens.length + 1).join(' ') || 'none'}.  Response: ${parsedCustomCommand.rest.join(' ')}`,
             custom: true
