@@ -1,34 +1,23 @@
 import { CommandAction, CommandHandler } from "./commandBot";
 
-const deleteCommandAction: CommandAction = (context, words) => {
-    const { channelId, commandBot } = context;
-    if (words.length !== 1 || words[0][0] !== "!") return;
-    const commandNameToDelete = words[0].substring(1).toLowerCase();
+const deleteCommandAction: CommandAction = (message, tokenizedWords, commandBot) => {
+    const commandNameToDelete = tokenizedWords[0].toLowerCase();
     const matchingCommandHandler = commandBot.commandHandlers
         .find(commandHandler => commandHandler.commandName === commandNameToDelete);
     if (matchingCommandHandler === undefined) {
-        commandBot.sendMessage({
-            to: channelId,
-            message: `Command !${commandNameToDelete} does not exist.`
-        });
+        message.channel.send(`Command !${commandNameToDelete} does not exist.`);
         return;
     }
     if (!matchingCommandHandler.custom) {
-        commandBot.sendMessage({
-            to: channelId,
-            message: `Delete can only be used to delete custom commands.`
-        });
+        message.channel.send(`Delete can only be used to delete custom commands.`);
         return;
     }
     commandBot.commandHandlers = commandBot.commandHandlers.filter(commandHandler => commandHandler.commandName !== commandNameToDelete);
-    commandBot.sendMessage({
-        to: channelId,
-        message: `Command !${commandNameToDelete} successfully deleted.`
-    });
+    message.channel.send(`Command !${commandNameToDelete} successfully deleted.`);
 }
 
 export const deleteCommandHandler: CommandHandler = {
     commandName: 'delete',
     commandAction: deleteCommandAction,
-    description: 'Deletes a custom command.  Example: !delete !yell would delete the custom command !yell.'
+    description: 'Deletes a custom command.  Example: !delete yell would delete the custom command yell.'
 }

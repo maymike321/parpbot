@@ -1,4 +1,4 @@
-import discord from 'discord.io';
+import Discord, { Client}  from 'discord.js';
 import { createParser, Parser } from './parser';
 import { CommandAction, CommandHandler } from './commandBot';
 
@@ -53,29 +53,21 @@ const customCommandParser = createParser({
     tokenParser: pipeParser
 });
 
-const customCommandAction: CommandAction = (context, words) => {
-    const { commandBot } = context;
+const customCommandAction: CommandAction = (message, words, commandBot) => {
     try {
         const parsedCustomCommand = customCommandParser(words);
         const validity = checkValidityOfCustomCommand(parsedCustomCommand);
         if (!validity.valid) {
-            commandBot.sendMessage({
-                to: context.channelId,
-                message: validity.error
-            });
+            message.channel.send(validity.error);
             return;
         }
         const tokens = parsedCustomCommand.tokens as Token[] || [];
         commandBot.addCommandHandler({
             commandName: parsedCustomCommand.commandName.toLowerCase(),
-            commandAction: (newContext, newWords) => {
-                const { channelId } = newContext;
+            commandAction: (newMessage, newWords, newCommandBot) => {
                 const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, commandBot);
                 if (!validityOfExecutedCommand.valid) {
-                    commandBot.sendMessage({
-                        to: channelId,
-                        message: validityOfExecutedCommand.error
-                    });
+                    newmessage.channel.send(validityOfExecutedCommand.error);
                     return;
                 }
                 const variables = tokens.map((token, tokenIndex) => {
@@ -89,24 +81,15 @@ const customCommandAction: CommandAction = (context, words) => {
                         .reduce((currentWords, variable) => currentWords.replace(new RegExp(`{${variable.name}}`, 'g'), variable.value), word)
                         .replace(/\\{/g, "{").replace(/\\}/g, "}");
                 }).join(' ');
-                commandBot.sendMessage({
-                    to: channelId,
-                    message
-                });
+                newmessage.channel.send(message);
             },
             description: `Template: ${words.slice(1, tokens.length + 1).join(' ') || 'none'}.  Response: ${parsedCustomCommand.rest.join(' ')}`,
             custom: true
         });
-        commandBot.sendMessage({
-            to: context.channelId,
-            message: `Custom command !${parsedCustomCommand.commandName} was successfully created.`
-        })
+        message.channel.send(`Custom command !${parsedCustomCommand.commandName} was successfully created.`);
     }
     catch(e) {
-        commandBot.sendMessage({
-            to: context.channelId,
-            message: `${e}`
-        });
+        message.channel.send(`${e}`);
     }
 }
 
@@ -156,7 +139,7 @@ const checkValidityOfCustomCommand = (parsedCustomCommand: { success: any; error
     }
 }
 
-const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[], words: string[], bot: discord.Client) => {
+const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[], words: string[], bot: Client) => {
     if (tokens.length > newWords.length) {
         return {
             valid: false,
@@ -185,7 +168,7 @@ const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[
     }
 }
 
-const userExists = (possibleUser: string, bot: discord.Client) => {
+const userExists = (possibleUser: string, bot: Client) => {
     const userId = possibleUser.substring(2, possibleUser.length - 1);
     return bot.users[userId] != undefined;
 }

@@ -13,11 +13,4 @@ commandBot.addCommandHandler(pretendToTypeCommandHandler);
 commandBot.addCommandHandler(customCommandHandler);
 commandBot.addCommandHandler(deleteCommandHandler);
 commandBot.addCommandHandler(getIdCommandHandler);
-commandBot.addCommandHandler({commandName: 'test', commandAction: (context, words) => {
-    const { commandBot } = context;
-    commandBot.sendMessage({
-        to: context.channelId,
-        message: JSON.stringify(commandBot)
-    });
-}, description: 'testing some things'})
 commandBot.run();

@@ -1,4 +1,4 @@
-import discord from 'discord.io';
+import Discord, { Message } from 'discord.js';
 
 export type CommandHandler = {
     commandName: string,
@@ -7,52 +7,32 @@ export type CommandHandler = {
     custom?: boolean
 }
 
-export type CommandAction = (context: Context, words: string[]) => void;
+export type CommandAction = (message: Message, tokenizedContent: string[], commandBot?: CommandBot) => void;
 
-export type Context = {
-    user: string,
-    userId: string,
-    channelId: string,
-    message: string,
-    event: any,
-    commandBot: CommandBot
-}
-
-export class CommandBot extends discord.Client {
+export class CommandBot extends Discord.Client {
     commandHandlers: CommandHandler[];
     addCommandHandler: (commandHandler: CommandHandler) => void;
-    run: () => void;
-    setPrefix: (prefix: string) => void;
+    run: (login?: boolean) => void;
+    prefix: string;
     constructor(authToken: string) {
-        super({token: authToken});
-        let messagePrefix: string = '!';
+        super();
+        this.prefix = '!';
         this.commandHandlers = [];
         this.addCommandHandler = (commandHandler) => {
             if (this.commandHandlers.some(command => command.commandName === commandHandler.commandName)) throw Error(`Command ${commandHandler.commandName} already registered!`);
             this.commandHandlers.push(commandHandler);
         };
-        this.run = () => {
-            this.on('message', (user, userId, channelId, message, event) => {
-                const messageContext = {
-                    user,
-                    userId,
-                    channelId,
-                    message,
-                    event,
-                    commandBot: this};
-                if (message.substring(0, 1) === messagePrefix) {
-                    const tokenizedMessage = message.split(' ');
+        this.run = (login: boolean = true) => {
+            this.on('message', message => {
+                const content = message.content;
+                if (content.substring(0, 1) === this.prefix) {
+                    const tokenizedMessage = content.split(' ');
                     const givenCommandName = tokenizedMessage[0].substring(1).toLowerCase();
-                    this.commandHandlers.forEach(commandHandler => {
-                        const { commandName, commandAction } = commandHandler;
-                        if (commandName.toLowerCase() === givenCommandName) {
-                            commandAction(messageContext, tokenizedMessage.slice(1));
-                        }
-                    });
+                    const properCommandhandler = this.commandHandlers.find(commandHandler => commandHandler.commandName.toLowerCase() === givenCommandName);
+                    if (properCommandhandler) properCommandhandler.commandAction(message, tokenizedMessage.slice(1), this);
                 }
             });
-            this.connect();
+            if (login) this.login(authToken);
         }
-        this.setPrefix = (prefix) => messagePrefix = prefix;
     }
 }

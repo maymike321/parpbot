@@ -72,25 +72,19 @@ const remindCommandParser = createParser({
     resultName: 'timeUnit'
 });
 
-const remindCommandAction: CommandAction = (context, words) => {
-    const { userId, channelId, commandBot } = context;
-    const remindCommand = remindCommandParser(words);
+const remindCommandAction: CommandAction = (message, tokenizedWords) => {
+    const { author: {id} } = message;
+    const remindCommand = remindCommandParser(tokenizedWords);
     if (!remindCommand.success) return;
-    const userToRemind = remindCommand.userId ? remindCommand.userId : userId;
+    const userToRemind = remindCommand.userId ? remindCommand.userId : id;
     const timeUnit = remindCommand.timeNumber === 1 ? remindCommand.timeUnit.substring(0, remindCommand.timeUnit.length - 1) : remindCommand.timeUnit;
     const reminder = remindCommand.rest.join(' ');
-    commandBot.sendMessage({
-        to: channelId,
-        message: `Reminding <@${userToRemind}> "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`
-    });
+    message.channel.send(`Reminding <@${userToRemind}> "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`);
     setTimeout(() => {
-        const messageBeginning = userToRemind !== userId ?
-        `<@${userId}> has sent you a reminder: ` :
+        const messageBeginning = userToRemind !== id ?
+        `<@${id}> has sent you a reminder: ` :
         `Reminder: `;
-        commandBot.sendMessage({
-            to: userToRemind,
-            message: `${messageBeginning}${reminder}`
-        });
+        message.author.send(`${messageBeginning}${reminder}`);
     }, moment().add(remindCommand.timeNumber, timeUnit).diff(moment(), 'milliseconds'));
 }
 
