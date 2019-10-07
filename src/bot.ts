@@ -13,7 +13,7 @@ commandBot.addCommandHandler(pretendToTypeCommandHandler);
 commandBot.addCommandHandler(customCommandHandler);
 commandBot.addCommandHandler(deleteCommandHandler);
 commandBot.addCommandHandler(getIdCommandHandler);
-commandBot.addCommandHandler({commandName: 'test', commandAction: (message, words) => {
-    message.channel.send(JSON.stringify(message.member.permissions.toArray()));
+commandBot.addCommandHandler({commandName: 'test', commandAction: (message, words, commandBot) => {
+    message.channel.send(JSON.stringify(commandBot.users));
 }, description: 'testing a thing'});
 commandBot.run();
