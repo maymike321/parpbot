@@ -19,5 +19,6 @@ const deleteCommandAction: CommandAction = (message, words, commandBot) => {
 export const deleteCommandHandler: CommandHandler = {
     commandName: 'delete',
     commandAction: deleteCommandAction,
-    description: 'Deletes a custom command.  Example: !delete yell would delete the custom command yell.'
+    description: 'Deletes a custom command.  Example: !delete yell would delete the custom command yell.',
+    requiredPermissions: ['ADMINISTRATOR']
 }
