@@ -1,4 +1,4 @@
-import { Client}  from 'discord.js';
+import { TextChannel, DMChannel, GroupDMChannel }  from 'discord.js';
 import { createParser, Parser } from './parser';
 import { CommandAction, CommandHandler } from './commandBot';
 
@@ -65,7 +65,7 @@ const customCommandAction: CommandAction = (message, words, commandBot) => {
         commandBot.addCommandHandler({
             commandName: parsedCustomCommand.commandName.toLowerCase(),
             commandAction: (newMessage, newWords) => {
-                const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, commandBot);
+                const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, newMessage.channel);
                 if (!validityOfExecutedCommand.valid) {
                     newMessage.channel.send(validityOfExecutedCommand.error);
                     return;
@@ -139,7 +139,7 @@ const checkValidityOfCustomCommand = (parsedCustomCommand: { success: any; error
     }
 }
 
-const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[], words: string[], bot: Client) => {
+const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[], words: string[], channel: TextChannel | DMChannel | GroupDMChannel) => {
     if (tokens.length > newWords.length) {
         return {
             valid: false,
@@ -149,7 +149,7 @@ const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[
     const invalidTokens = tokens.map((token, tokenIndex) => {
         if (token.type === userSymbol) {
             const username = newWords[tokenIndex];
-            if (!userExists(username, bot)) {
+            if (isUser(username, channel)) {
                 return {
                     valid: false,
                     error: `Expected user but instead got ${username}`
@@ -168,10 +168,11 @@ const checkValidityOfExecutedCustomCommand = (tokens: Token[], newWords: string[
     }
 }
 
-const userExists = (possibleUser: string, bot: Client) => {
+const isUser = (possibleUser: string, channel: TextChannel | DMChannel | GroupDMChannel) => {
     const userId = possibleUser.substring(2, possibleUser.length - 1);
-    return bot.users[userId] != undefined;
+    return (channel instanceof TextChannel) && (channel as TextChannel).members[userId] !== undefined;
 }
+
 
 export const customCommandHandler: CommandHandler = {
     commandName: 'create',
