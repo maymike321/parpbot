@@ -1,7 +1,7 @@
 import { CommandAction, CommandHandler } from "./commandBot";
 
-const pretendToTypeCommandAction: CommandAction = (message, tokenizedWords, commandBot) => {
-    if (tokenizedWords.length !== 0) return;
+const pretendToTypeCommandAction: CommandAction = (message, words, commandBot) => {
+    if (words.length !== 0) return;
     message.channel.startTyping();
     setTimeout(() => message.channel.stopTyping(), 10000);
 }

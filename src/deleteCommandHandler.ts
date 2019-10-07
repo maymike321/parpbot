@@ -1,7 +1,7 @@
 import { CommandAction, CommandHandler } from "./commandBot";
 
-const deleteCommandAction: CommandAction = (message, tokenizedWords, commandBot) => {
-    const commandNameToDelete = tokenizedWords[0].toLowerCase();
+const deleteCommandAction: CommandAction = (message, words, commandBot) => {
+    const commandNameToDelete = words[0].toLowerCase();
     const matchingCommandHandler = commandBot.commandHandlers
         .find(commandHandler => commandHandler.commandName === commandNameToDelete);
     if (matchingCommandHandler === undefined) {

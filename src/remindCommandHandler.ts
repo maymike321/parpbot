@@ -72,9 +72,9 @@ const remindCommandParser = createParser({
     resultName: 'timeUnit'
 });
 
-const remindCommandAction: CommandAction = (message, tokenizedWords) => {
+const remindCommandAction: CommandAction = (message, words) => {
     const { author: {id} } = message;
-    const remindCommand = remindCommandParser(tokenizedWords);
+    const remindCommand = remindCommandParser(words);
     if (!remindCommand.success) return;
     const userToRemind = remindCommand.userId ? remindCommand.userId : id;
     const timeUnit = remindCommand.timeNumber === 1 ? remindCommand.timeUnit.substring(0, remindCommand.timeUnit.length - 1) : remindCommand.timeUnit;

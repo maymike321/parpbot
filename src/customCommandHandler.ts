@@ -1,4 +1,4 @@
-import Discord, { Client}  from 'discord.js';
+import { Client}  from 'discord.js';
 import { createParser, Parser } from './parser';
 import { CommandAction, CommandHandler } from './commandBot';
 
@@ -64,7 +64,7 @@ const customCommandAction: CommandAction = (message, words, commandBot) => {
         const tokens = parsedCustomCommand.tokens as Token[] || [];
         commandBot.addCommandHandler({
             commandName: parsedCustomCommand.commandName.toLowerCase(),
-            commandAction: (newMessage, newWords, newCommandBot) => {
+            commandAction: (newMessage, newWords) => {
                 const validityOfExecutedCommand = checkValidityOfExecutedCustomCommand(tokens, newWords, words, commandBot);
                 if (!validityOfExecutedCommand.valid) {
                     newMessage.channel.send(validityOfExecutedCommand.error);
@@ -176,5 +176,6 @@ const userExists = (possibleUser: string, bot: Client) => {
 export const customCommandHandler: CommandHandler = {
     commandName: 'create',
     commandAction: customCommandAction,
-    description: 'Creates a custom command.  Syntax is as follows:\n\t!create !commandname <variables> | <response>\n\tExample:  !create !yell {word:w} {user:u} {message:m} | {p} {u}, {m}! creates a command !yell, which can be used like !yell Hey @para you\'re a nerd, which causes the bot to say \"Hey @para, you\'re a nerd!".\n\tThree types of variables:  word, which is a single word; user, which is a discord user; and message, which is one or more words at the end of the command.'
+    description: 'Creates a custom command.  Syntax is as follows:\n\t!create !commandname <variables> | <response>\n\tExample:  !create !yell {word:w} {user:u} {message:m} | {p} {u}, {m}! creates a command !yell, which can be used like !yell Hey @para you\'re a nerd, which causes the bot to say \"Hey @para, you\'re a nerd!".\n\tThree types of variables:  word, which is a single word; user, which is a discord user; and message, which is one or more words at the end of the command.',
+    requiredPermissions: ['ADMINISTRATOR']
 }

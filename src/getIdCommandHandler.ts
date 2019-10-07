@@ -1,12 +1,12 @@
 import { CommandAction, CommandHandler } from "./commandBot";
 
-const getIdCommandAction: CommandAction = (message, tokenizedWords) => {
-    if (tokenizedWords.length === 0) {
+const getIdCommandAction: CommandAction = (message, words) => {
+    if (words.length === 0) {
         message.channel.send(`Your user id is ${message.author.id}`);
         return;
     }
-    const possibleUser = tokenizedWords[0];
-    if (tokenizedWords.length !== 1 || (!possibleUser.startsWith("<@") || !possibleUser.endsWith(">"))) {
+    const possibleUser = words[0];
+    if (words.length !== 1 || (!possibleUser.startsWith("<@") || !possibleUser.endsWith(">"))) {
         message.channel.send(`Usage:  !getId @user`);
         return;
     }
