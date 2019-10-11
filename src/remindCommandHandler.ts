@@ -79,7 +79,7 @@ const remindCommandAction: CommandAction = async (message, words, commandBot) =>
     const userToRemind = remindCommand.userId ? await commandBot.fetchUser(remindCommand.userId) : message.author;
     const timeUnit = remindCommand.timeNumber === 1 ? remindCommand.timeUnit.substring(0, remindCommand.timeUnit.length - 1) : remindCommand.timeUnit;
     const reminder = remindCommand.rest.join(' ');
-    message.channel.send(`Reminding <@${userToRemind}> "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`);
+    message.channel.send(`Reminding ${userToRemind} "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`);
     setTimeout(() => {
         const messageBeginning = userToRemind.id !== id ?
         `${id} has sent you a reminder: ` :
