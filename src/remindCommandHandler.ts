@@ -1,5 +1,5 @@
 import { createParser, Parser } from './parser';
-import moment from 'moment';
+const moment = require("moment").default || require("moment")
 import { CommandAction, CommandHandler } from './commandBot';
 
 const userIdParser: Parser = (token, wordIndex, words) => {
@@ -82,7 +82,7 @@ const remindCommandAction: CommandAction = async (message, words, commandBot) =>
     message.channel.send(`Reminding ${userToRemind} "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`);
     setTimeout(() => {
         const messageBeginning = userToRemind.id !== id ?
-        `${id} has sent you a reminder: ` :
+        `$@<${id}> has sent you a reminder: ` :
         `Reminder: `;
         userToRemind.send(`${messageBeginning}${reminder}`);
     }, moment().add(remindCommand.timeNumber, timeUnit).diff(moment(), 'milliseconds'));
