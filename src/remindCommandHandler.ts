@@ -72,19 +72,19 @@ const remindCommandParser = createParser({
     resultName: 'timeUnit'
 });
 
-const remindCommandAction: CommandAction = (message, words) => {
+const remindCommandAction: CommandAction = async (message, words, commandBot) => {
     const { author: {id} } = message;
     const remindCommand = remindCommandParser(words);
     if (!remindCommand.success) return;
-    const userToRemind = remindCommand.userId ? remindCommand.userId : id;
+    const userToRemind = remindCommand.userId ? await commandBot.fetchUser(remindCommand.userId) : message.author;
     const timeUnit = remindCommand.timeNumber === 1 ? remindCommand.timeUnit.substring(0, remindCommand.timeUnit.length - 1) : remindCommand.timeUnit;
     const reminder = remindCommand.rest.join(' ');
     message.channel.send(`Reminding <@${userToRemind}> "${reminder}" in ${remindCommand.timeNumber} ${timeUnit}`);
     setTimeout(() => {
-        const messageBeginning = userToRemind !== id ?
+        const messageBeginning = userToRemind.id !== id ?
         `<@${id}> has sent you a reminder: ` :
         `Reminder: `;
-        message.author.send(`${messageBeginning}${reminder}`);
+        userToRemind.send(`${messageBeginning}${reminder}`);
     }, moment().add(remindCommand.timeNumber, timeUnit).diff(moment(), 'milliseconds'));
 }
 
