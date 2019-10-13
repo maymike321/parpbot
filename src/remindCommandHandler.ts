@@ -17,8 +17,6 @@ const minutes = 'minutes';
 const hours = 'hours';
 const days = 'days';
 const weeks = 'weeks';
-const months = 'months';
-const years = 'years';
 
 const unitParser: Parser = (token, wordIndex, words) => {
     switch (token) {
@@ -46,15 +44,6 @@ const unitParser: Parser = (token, wordIndex, words) => {
         case 'week':
         case 'weeks':
             return weeks;
-        case 'mon':
-        case 'month':
-        case 'months':
-            return months;
-        case 'y':
-        case 'yr':
-        case 'year':
-        case 'years':
-            return years;
         default:
             return; 
     }
