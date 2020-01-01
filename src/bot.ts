@@ -16,7 +16,7 @@ commandBot.addCommandHandler(getIdCommandHandler);
 commandBot.addCommandHandler({
     commandName: 'test',
     commandAction: (message, words, commandBot) => {
-        message.channel.send(JSON.stringify(commandBot.users.get(words[0])));
+        message.channel.send(JSON.stringify(message.guild.members));
     },
     description: 'testing'})
 commandBot.run();
