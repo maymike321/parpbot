@@ -3,12 +3,15 @@ const moment = require("moment").default || require("moment")
 import { CommandAction, CommandHandler } from './commandBot';
 
 const userIdParser: Parser = (token, wordIndex, words) => {
-    if (token[1] === "@") return token.substring(2, token.length - 1);
-    return;
+    if (token[1] === "@") {
+        var userId = token.substring(2, token.length - 1);
+        return userId.startsWith('!') ? userId.slice(1) : userId;
+    }
+    return undefined;
 }
 
 const numberParser: Parser = (token, wordIndex, words) => {
-    if (isNaN(token as any)) return;
+    if (isNaN(token as any)) return undefined;
     return parseInt(token);
 }
 
@@ -65,7 +68,6 @@ const remindCommandAction: CommandAction = async (message, words, commandBot) =>
     const { author: {id} } = message;
     const remindCommand = remindCommandParser(words);
     if (!remindCommand.success) return;
-    message.channel.send(remindCommand.userId);
     const userToRemind = remindCommand.userId ? await commandBot.fetchUser(remindCommand.userId) : message.author;
     const timeUnit = remindCommand.timeNumber === 1 ? remindCommand.timeUnit.substring(0, remindCommand.timeUnit.length - 1) : remindCommand.timeUnit;
     const reminder = remindCommand.rest.join(' ');

@@ -79,7 +79,19 @@ describe('Remind command handler', () => {
         jest.runAllTimers();
         expect(usersSentTo[0].id).toBe(userTwo.id);
         done();
-    })
+    });
+
+    test('Message with user specified with nickname sends to specified user', async (done) => {
+        const message = {
+            author: userOne,
+            channel: channelOne
+        };
+        const words = [`<@!${userTwo.id}>`, '0', 'sec', 'hello'];
+        await remindCommandHandler.commandAction(convert<Message>(message), words, convert<CommandBot>(commandBot));
+        jest.runAllTimers();
+        expect(usersSentTo[0].id).toBe(userTwo.id);
+        done();
+    });
 
     const abbreviationsToUnitOfTimeMap = [
         {
