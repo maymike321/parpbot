@@ -8,7 +8,7 @@ export type CommandHandler = {
     requiredPermissions?: PermissionString[]
 }
 
-export type CommandAction = (message: Message, words: string[], commandBot?: CommandBot) => void;
+export type CommandAction = (message: Message, words: string[], commandBot: CommandBot) => void;
 
 export class CommandBot extends Client {
     commandHandlers: CommandHandler[];
@@ -31,7 +31,7 @@ export class CommandBot extends Client {
                     const tokenizedMessage = content.split(' ');
                     const givenCommandName = tokenizedMessage[0].substring(1).toLowerCase();
                     const properCommandhandler = this.commandHandlers.find(commandHandler => commandHandler.commandName.toLowerCase() === givenCommandName);
-                    const hasPermissions = properCommandhandler.requiredPermissions.length == 0  || properCommandhandler.requiredPermissions.every(permission => message.member.hasPermission(permission))
+                    const hasPermissions = properCommandhandler != null && properCommandhandler.requiredPermissions != null && (properCommandhandler.requiredPermissions.length == 0  || properCommandhandler.requiredPermissions.every(permission => message.member.hasPermission(permission)));
                     if (properCommandhandler && hasPermissions) properCommandhandler.commandAction(message, tokenizedMessage.slice(1), this);
                 }
             });
